@@ -115,6 +115,9 @@ def explore(system_path, software_path, sam_path, users_paths):
                 new_keys += keys[index+1:]
                 if len(new_keys) != len(keys):
                     cursor_y += 1
+                while cursor_y > max_y - 3:
+                    first_displayed_key += 1
+                    cursor_y -= 1
                 keys = new_keys
 
             elif key == curses.KEY_LEFT and not screen:
