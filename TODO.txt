@@ -1,0 +1,5 @@
+-> Split key name on \ when too big
+-> Display values on multiple lines when too big
+-> Handle SAM hive
+-> Complete README
+

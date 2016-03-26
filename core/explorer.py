@@ -37,7 +37,7 @@ def explore(system_path, software_path, sam_path, users_paths):
     users_hives = []
     users_names = []
     if users_paths:
-        for (user, user_path) in users_path:
+        for (user, user_path) in users_paths:
             user_hive =  Registry.Registry(user_path)
             users_names.append((user, user_hive.open("").name()))
             keys.append(user)
@@ -57,7 +57,7 @@ def explore(system_path, software_path, sam_path, users_paths):
     base_screen(stdscr, cursor_y, cursor_y_2, screen)
     display_keys(stdscr, cursor_y, keys, current_key, first_displayed_key)
     display_infos(stdscr, cursor_y, first_displayed_key, first_displayed_value,
-        keys, current_key, system_hive, software_hive, system_name, 
+        keys, current_key, system_hive, software_hive, users_hives, system_name,
         software_name, sam_name, users_names)
 
     while 1:
@@ -68,8 +68,8 @@ def explore(system_path, software_path, sam_path, users_paths):
                 first_displayed_key)
             key_values = display_infos(stdscr, cursor_y, first_displayed_key,
                 first_displayed_value, keys, current_key, system_hive, 
-                software_hive, system_name, software_name, sam_name, 
-                users_names)
+                software_hive, users_hives, system_name, software_name,
+                sam_name, users_names)
             key = stdscr.getch()
             max_y, max_x = stdscr.getmaxyx()
 
@@ -177,8 +177,8 @@ def display_keys(stdscr, cursor_y, keys, current_key, first_displayed_key):
 
 
 def display_infos(stdscr, cursor_y, first_displayed_key, first_displayed_value,
-    keys, current_key, system_hive, software_hive, system_name, software_name, 
-    sam_name, users_names):
+    keys, current_key, system_hive, software_hive, users_hives, system_name,
+    software_name, sam_name, users_names):
     try:
         max_y, max_x = stdscr.getmaxyx()
         
@@ -191,6 +191,12 @@ def display_infos(stdscr, cursor_y, first_displayed_key, first_displayed_value,
         elif keys[first_displayed_key + 
             cursor_y - 6].split("\\")[0] == "SOFTWARE":
             key = software_hive.open(current_key)
+        else:
+            for (user_name, user_hive_name) in users_names:
+                if keys[first_displayed_key + cursor_y - 6].split("\\")[0] == user_name:
+                    index = users_names.index((user_name, user_hive_name))
+                    key = users_hives[index][1].open(current_key)
+                    break
 
         i = 7
         if max_y > 9:
@@ -311,4 +317,9 @@ def get_key_from_name(system_hive, software_hive, sam_hive, users_hives, name):
         return software_hive.open("")
     elif name.split("\\")[0] == "SOFTWARE":
         return software_hive.open(name.replace("SOFTWARE\\", "", 1))
+    for (user_name, user_hive) in users_hives:
+        if name == user_name:
+            return user_hive.open("")
+        elif name.split("\\")[0] == user_name:
+            return user_hive.open(name.replace(user_name + "\\", "", 1))
     return None
