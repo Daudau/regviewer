@@ -168,7 +168,7 @@ def display_keys(stdscr, cursor_y, keys, current_key, first_displayed_key):
                 level = len(keys[first_displayed_key + i - 6].split("\\"))
                 stdscr.move(i, 3)
                 stdscr.addnstr("  "*(level-1) + "| " +
-                    keys[first_displayed_key + i - 6].split("\\")[-1], max_x/2 - 4)
+                    keys[first_displayed_key + i - 6].split("\\")[-1], (int)(max_x/2) - 4)
         current_key = keys[first_displayed_key + cursor_y - 6]
     except:
         stdscr.clear()
@@ -200,28 +200,28 @@ def display_infos(stdscr, cursor_y, first_displayed_key, first_displayed_value,
 
         i = 7
         if max_y > 9:
-            stdscr.move(i, max_x/2 + 3)
+            stdscr.move(i, (int)(max_x/2) + 3)
             #TODO: split at \
             name = replace_hive_name(system_name, software_name, sam_name,
                 users_names, keys[first_displayed_key + cursor_y - 6])
-            stdscr.addstr("Key name: " + name[0:max_x/2 - 13])
-            name = name[max_x/2 - 13:]
+            stdscr.addstr("Key name: " + name[0:(int)(max_x/2) - 13])
+            name = name[(int)(max_x/2) - 13:]
             while len(name) > 0:
                 i += 1
-                stdscr.move(i, max_x/2 + 3)
-                stdscr.addstr(name[0:max_x/2 - 3])
-                name = name[max_x/2 - 3:]
+                stdscr.move(i, (int)(max_x/2) + 3)
+                stdscr.addstr(name[0:(int)(max_x/2) - 3])
+                name = name[(int)(max_x/2) - 3:]
         if max_y > 11:
-            stdscr.move(i + 2, max_x/2 + 3)
+            stdscr.move(i + 2, (int)(max_x/2) + 3)
             stdscr.addnstr("Key timestamp: " + format(key.timestamp(), 
-                '%a, %d %B %Y %H:%M:%S %Z'), max_x/2 - 3)
+                '%a, %d %B %Y %H:%M:%S %Z'), (int)(max_x/2) - 3)
 
         if max_y > 13:
             key_values = key.values()
-            stdscr.move(i+4, max_x/2 + 3)
+            stdscr.move(i+4, (int)(max_x/2) + 3)
             stdscr.addstr("Key values:")
             if first_displayed_value > 0:
-                stdscr.move(i+5, max_x/2 +3)
+                stdscr.move(i+5, (int)(max_x/2) +3)
                 stdscr.addstr("    [...]")
                 begin_of_values = i+6
             else:
@@ -229,21 +229,21 @@ def display_infos(stdscr, cursor_y, first_displayed_key, first_displayed_value,
             if len(key_values) + begin_of_values - first_displayed_value < max_y - 2:
                 end_of_values = begin_of_values + len(key_values) - first_displayed_value 
             else:
-                stdscr.move(max_y - 3, max_x/2 + 3)
+                stdscr.move(max_y - 3, (int)(max_x/2) + 3)
                 stdscr.addstr("    [...]")
                 end_of_values = max_y - 3
             for j in range(begin_of_values, end_of_values):
-                stdscr.move(j, max_x/2 + 3)
+                stdscr.move(j, (int)(max_x/2) + 3)
                 try:
-                    stdscr.addstr("    " + 
+                    stdscr.addnstr("    " + 
                         str(key_values[j - begin_of_values +
                         first_displayed_value].name()) + ": " + 
                         str(key_values[j - begin_of_values +
-                        first_displayed_value].value()))
+                        first_displayed_value].value()), (int)(max_x/2) - 4)
                 except:
-                    stdscr.addstr("    Can't display value for " + 
+                    stdscr.addnstr("    Can't display value for " + 
                         str(key_values[j - begin_of_values +
-                        first_displayed_value].name()))
+                        first_displayed_value].name()), (int)(max_x/2) - 4)
         
         return key_values
 
@@ -282,7 +282,7 @@ def base_screen(stdscr, cursor_y, cursor_y_2, screen):
                 stdscr.refresh()
         else:
             if cursor_y_2 > 5:
-                stdscr.move(cursor_y_2, max_x/2 + 1)
+                stdscr.move(cursor_y_2, (int)(max_x/2) + 1)
                 stdscr.addstr("->")
                 stdscr.refresh()
 
